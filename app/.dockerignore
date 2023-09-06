@@ -1,0 +1,17 @@
+# Ignore everything
+*
+
+# Allow files and directories
+
+#Global
+!/app
+!/alembic.ini
+!/requirements.txt
+!/start.sh
+
+#Lint
+!/.git
+!/.pre-commit-config.yaml
+!/pyproject.toml
+!/requirements_dev.txt
+!/lint.sh

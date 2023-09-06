@@ -1,0 +1,11 @@
+# JetBrains
+.idea
+
+# Python
+venv
+__pycache__
+*.sql
+
+# Secrets
+.env
+.env.local

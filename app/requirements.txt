@@ -1,0 +1,5 @@
+fastapi==0.103.1
+gunicorn==21.2.0
+uvicorn==0.23.2
+SQLAlchemy==2.0.20
+alembic==1.12.0
