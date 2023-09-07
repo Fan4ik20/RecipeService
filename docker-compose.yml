@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  recipedb:
+    image: postgres:11
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=recipe_user
+      - POSTGRES_PASSWORD=recipe_psw
+      - POSTGRES_DB=recipe_db
+  web:
+    build:
+      context: ./app
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./app:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - recipedb
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+networks:
+  default:
+    name: recipe_network
+    external: true
