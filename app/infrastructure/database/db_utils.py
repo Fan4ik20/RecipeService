@@ -1,10 +1,10 @@
-from dataclasses import dataclass
-
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     async_sessionmaker,
     create_async_engine,
 )
+
+from infrastructure.config import BaseConfig
 
 __all__ = (
     "DBConfig",
@@ -14,12 +14,14 @@ __all__ = (
 )
 
 
-@dataclass(frozen=True)
-class DBConfig:
-    username: str
+class DBConfig(BaseConfig):
+    user: str
     password: str
     endpoint: str
-    db_name: str
+    name: str
+
+    class Config(BaseConfig.Config):
+        env_prefix = "DB_"
 
 
 def create_engine(db_config: DBConfig) -> AsyncEngine:
@@ -31,4 +33,4 @@ def create_sessionmaker(engine: AsyncEngine) -> async_sessionmaker:
 
 
 def build_async_db_url(config: DBConfig) -> str:
-    return f"postgresql+asyncpg://{config.username}:{config.password}@{config.endpoint}/{config.db_name}"  # noqa
+    return f"postgresql+asyncpg://{config.user}:{config.password}@{config.endpoint}/{config.name}"  # noqa

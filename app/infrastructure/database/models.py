@@ -1,6 +1,14 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    Boolean,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    func,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -34,10 +42,10 @@ class Recipe(Base):
     description: Mapped[str] = mapped_column(Text, nullable=True)
     instructions: Mapped[str] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow
+        DateTime, server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+        DateTime, server_default=func.now(), server_onupdate=func.now()
     )
     likes_count: Mapped[int] = mapped_column(Integer, default=0)
     comments_count: Mapped[int] = mapped_column(Integer, default=0)
@@ -64,10 +72,10 @@ class Comment(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     comment: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow
+        DateTime, server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+        DateTime, server_default=func.now(), server_onupdate=func.now()
     )
     recipe_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("recipes.id"), nullable=False
@@ -89,12 +97,11 @@ class Comment(Base):
 class Watchlist(Base):
     __tablename__ = "watchlists"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     recipe_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("recipes.id"), nullable=False
+        Integer, ForeignKey("recipes.id"), nullable=False, primary_key=True
     )
     user_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("users.id"), nullable=False
+        Integer, ForeignKey("users.id"), nullable=False, primary_key=True
     )
 
     user = relationship("User", back_populates="watchlists")

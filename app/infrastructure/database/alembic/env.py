@@ -15,7 +15,6 @@ config = context.config
 # this will overwrite the ini-file sqlalchemy.url path
 # with the path given in the config of the main code
 
-# TODO. NOT WORKING
 config.set_main_option("sqlalchemy.url", build_async_db_url(DBConfig()))
 
 # Interpret the config file for Python logging.
