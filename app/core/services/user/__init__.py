@@ -1,5 +1,6 @@
 from .application import UserService
 from .dto import User, UserCreate, UserModel, UserUpdate
+from .exc import UserAlreadyExists, UserNotFound
 from .interfaces import HashManager, UserRepository
 
 __all__ = (
@@ -10,4 +11,6 @@ __all__ = (
     "UserUpdate",
     "UserService",
     "HashManager",
+    "UserAlreadyExists",
+    "UserNotFound",
 )

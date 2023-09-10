@@ -21,6 +21,9 @@ class UserRepository(Protocol):
     async def update(self, user: entities.User) -> entities.User:
         raise NotImplementedError
 
+    async def commit(self) -> None:
+        raise NotImplementedError
+
 
 class HashManager(Protocol):
     def hash_password(self, psw: str) -> str:
