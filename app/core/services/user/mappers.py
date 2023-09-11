@@ -8,7 +8,7 @@ __all__ = (
 
 
 def map_dto_to_domain(user: dto.UserCreate) -> entities.User:
-    return entities.User(
+    return entities.User.create(
         username=user.username,
         email=user.username,
         password_hash=user.password,

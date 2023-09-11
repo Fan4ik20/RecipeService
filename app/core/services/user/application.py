@@ -1,4 +1,3 @@
-from core.domain import entities
 from core.services.user import dto, exc, mappers
 from core.services.user.interfaces import HashManager, UserRepository
 
@@ -21,6 +20,8 @@ class UserService:
         user.password = self._hash_manager.hash_password(user.password)
         domain = await self._repo.create(mappers.map_dto_to_domain(user))
 
+        await self._repo.commit()
+
         return mappers.map_domain_to_model(domain)
 
     async def get_user(
@@ -40,23 +41,24 @@ class UserService:
 
         return mappers.map_domain_to_model(user)
 
-    def _update_domain(
-        self, user_domain: entities.User, user_dto: dto.UserUpdate
-    ) -> None:
-        if user_dto.email:
-            user_domain.email = user_dto.email
-        if user_dto.username:
-            user_domain.username = user_dto.username
-        if user_dto.password:
-            user_domain.password_hash = self._hash_manager.hash_password(
-                user_dto.password
-            )
-
     async def update_user(
         self, id_: int, user: dto.UserUpdate
     ) -> dto.UserModel:
         domain = await self._repo.get_by_id(id_)
 
-        self._update_domain(domain, user)
+        domain.update(
+            username=user.username,
+            email=user.email,
+            password_hash=self._hash_password(user.password),
+        )
 
-        return mappers.map_domain_to_model(await self._repo.update(domain))
+        user_model = mappers.map_domain_to_model(
+            await self._repo.update(domain)
+        )
+        await self._repo.commit()
+
+        return user_model
+
+    def _hash_password(self, psw: str | None) -> str | None:
+        p = self._hash_manager.hash_password(psw) if psw is not None else None
+        return p
